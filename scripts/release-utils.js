@@ -10,7 +10,26 @@
 'use strict';
 
 const {exec, echo, exit, test, env} = require('shelljs');
-const {revertFiles} = require('./scm-utils');
+const {revertFiles, saveFiles} = require('./scm-utils');
+
+function saveFilesToRestore(tmpPublishingFolder) {
+  const filesToSaveAndRestore = [
+    'template/Gemfile',
+    'template/_ruby-version',
+    'template/package.json',
+    '.ruby-version',
+    'Gemfile.lock',
+    'Gemfile',
+    'package.json',
+    'ReactAndroid/gradle.properties',
+    'Libraries/Core/ReactNativeVersion.js',
+    'React/Base/RCTVersion.m',
+    'ReactAndroid/src/main/java/com/facebook/react/modules/systeminfo/ReactNativeVersion.java',
+    'ReactCommon/cxxreact/ReactNativeVersion.h',
+  ];
+
+  saveFiles(filesToSaveAndRestore, tmpPublishingFolder);
+}
 
 function generateAndroidArtifacts(releaseVersion, tmpPublishingFolder) {
   // -------- Generating Android Artifacts
@@ -61,4 +80,5 @@ function generateAndroidArtifacts(releaseVersion, tmpPublishingFolder) {
 
 module.exports = {
   generateAndroidArtifacts,
+  saveFilesToRestore,
 };

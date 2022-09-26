@@ -37,9 +37,11 @@ const {
   exitIfNotOnGit,
   getCurrentCommit,
   isTaggedLatest,
-  saveFiles,
 } = require('./scm-utils');
-const {generateAndroidArtifacts} = require('./release-utils');
+const {
+  generateAndroidArtifacts,
+  saveFilesToRestore,
+} = require('./release-utils');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -73,22 +75,7 @@ const dryRunBuild = argv.dryRun;
 const includeHermes = argv.includeHermes;
 const isCommitly = nightlyBuild || dryRunBuild;
 
-const filesToSaveAndRestore = [
-  'template/Gemfile',
-  'template/_ruby-version',
-  'template/package.json',
-  '.ruby-version',
-  'Gemfile.lock',
-  'Gemfile',
-  'package.json',
-  'ReactAndroid/gradle.properties',
-  'Libraries/Core/ReactNativeVersion.js',
-  'React/Base/RCTVersion.m',
-  'ReactAndroid/src/main/java/com/facebook/react/modules/systeminfo/ReactNativeVersion.java',
-  'ReactCommon/cxxreact/ReactNativeVersion.h',
-];
-
-saveFiles(filesToSaveAndRestore, tmpPublishingFolder);
+saveFilesToRestore(tmpPublishingFolder);
 
 if (includeHermes) {
   const HERMES_INSTALL_LOCATION = 'sdks';
