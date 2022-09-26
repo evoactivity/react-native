@@ -28,16 +28,10 @@ const {
   launchPackagesInSeparateWindow,
 } = require('./testing-utils');
 
-const {generateAndroidArtifacts} = require('./release-utils');
-
-// setting this just 'cause this https://github.com/facebook/react-native/commit/0a3ca80af401654896cbc73e235711eef0f9b3c5
-// breaks a bunch of stuff. This should be enough.
-// TODO: follow up with Nicola in understanding the impact of the commit, and if we can remove this
-// also, remove the folder
-process.env.TMP_PUBLISH_DIR = fs.mkdtempSync(
-  path.join(os.tmpdir(), 'rn-publish-'),
-);
-console.info(`The temp folder is ${process.env.TMP_PUBLISH_DIR}`);
+const {
+  generateAndroidArtifacts,
+  saveFilesToRestore,
+} = require('./release-utils');
 
 const argv = yargs
   .option('t', {
@@ -124,6 +118,14 @@ if (argv.target === 'RNTester') {
 
   // create the local npm package to feed the CLI
 
+  // base setup required (specular to publish-npm.js)
+  const tmpPublishingFolder = fs.mkdtempSync(
+    path.join(os.tmpdir(), 'rn-publish-'),
+  );
+  echo(`The temp publishing folder is ${tmpPublishingFolder}`);
+
+  saveFilesToRestore(tmpPublishingFolder);
+
   // we need to add the unique timestamp to avoid npm/yarn to use some local caches
   const baseVersion = require('../package.json').version;
 
@@ -141,7 +143,7 @@ if (argv.target === 'RNTester') {
     exec(`node scripts/set-rn-version.js --to-version ${releaseVersion}`).code;
 
     // Generate native files (Android only for now)
-    generateAndroidArtifacts(releaseVersion);
+    generateAndroidArtifacts(releaseVersion, tmpPublishingFolder);
 
     // create locally the node module
     exec('npm pack');
@@ -195,6 +197,7 @@ if (argv.target === 'RNTester') {
     // at the end here I most likely want to set back the rn version to baseVersion!
     // for git "cleanness" reasons
     exec(`node scripts/set-rn-template-version.js ${baseVersion}`);
+    exec(`rm -rf ${tmpPublishingFolder}`);
   }
 }
 
