@@ -100,7 +100,7 @@ function isPackagerRunning(
 // literally, this is macos only
 // a more robust implementation can be found here:
 // https://github.com/react-native-community/cli/blob/7c003f2b1d9d80ec5c167614ba533a004272c685/packages/cli-platform-android/src/commands/runAndroid/index.ts#L195
-function launchPackagesInSeparateWindow() {
+function launchPackagerInSeparateWindow() {
   exec("open -a 'Terminal' ./scripts/packager.sh");
 }
 
