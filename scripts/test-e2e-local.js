@@ -25,7 +25,7 @@ const os = require('os');
 const {
   launchAndroidEmulator,
   isPackagerRunning,
-  launchPackagesInSeparateWindow,
+  launchPackagerInSeparateWindow,
 } = require('./testing-utils');
 
 const {
@@ -80,7 +80,7 @@ if (argv.target === 'RNTester') {
 
     // if everything succeeded so far, we can launch Metro and the app
     // start the Metro server in a separate window
-    launchPackagesInSeparateWindow();
+    launchPackagerInSeparateWindow();
 
     // launch the app on iOS simulator
     pushd('packages/rn-tester');
@@ -105,7 +105,7 @@ if (argv.target === 'RNTester') {
 
     // if everything succeeded so far, we can launch Metro and the app
     // start the Metro server in a separate window
-    launchPackagesInSeparateWindow();
+    launchPackagerInSeparateWindow();
     // just to make sure that the Android up won't have troubles finding the Metro server
     exec('adb reverse tcp:8081 tcp:8081');
     // launch the app

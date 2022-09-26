@@ -107,5 +107,5 @@ function launchPackagerInSeparateWindow() {
 module.exports = {
   launchAndroidEmulator,
   isPackagerRunning,
-  launchPackagesInSeparateWindow,
+  launchPackagerInSeparateWindow,
 };
